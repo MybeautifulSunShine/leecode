@@ -1,14 +1,19 @@
 package cn.leecode.printer;
 
+import java.lang.*;
+import java.util.*;
+import java.util.Comparator;
+
 /**
  * 描述:
  * 二叉搜索树
+ * 1 E 必须具备可比较性
  *
  * @author HeGaoJian
  * @version 1.0
  * @create 2020-05-18 18:52
  */
-public class BinarySearchTree<E extends Comparable> {
+public class BinarySearchTree<E> {
     private int size;
 
     /**
@@ -17,12 +22,20 @@ public class BinarySearchTree<E extends Comparable> {
     private Node<E> root;
 
     /**
+     * 在提供一个构造方法不需要写构造器
+     */
+    public BinarySearchTree() {
+        this(null);
+    }
+
+
+    /**
      * 传入默认的比较器
      */
-    private Comparable<E> comparable;
+    private java.util.Comparator<E> comparator;
 
-    public BinarySearchTree(Comparable<E> comparable) {
-        this.comparable = comparable;
+    public BinarySearchTree(Comparator<E> comparator) {
+        this.comparator = comparator;
     }
 
     // 元素的数量
@@ -97,8 +110,22 @@ public class BinarySearchTree<E extends Comparable> {
      * @return 返回值等于0，代表e1和e2相等；返回值大于0，代表e1大于e2；返回值小于于0，代表e1小于e2
      */
     private int compare(E e1, E e2) {
-        //实现接口告诉你应该怎么实现
-        return e1.compareTo(e2);
+
+        /**
+         * 实现接口告诉你应该怎么实现
+         * 传入不同的比较器 由外秒的实现类告诉你怎么工作
+         如果传入比较器 那么优先用比较器
+         */
+//        if (comparable != null) {
+//            return comparable.(e1, e2);
+//        }
+        //parent1
+//        return comparable.compare(e1, e2);
+        /**
+         * 如果没有比较器 同时自己又不能比 那么强制装换成比比较器接口
+         * 如果装换出现了问题 那就说明不能比,传的参数是错误的
+         */
+        return ((Comparable<E>) e1).compareTo(e2);
     }
 
 
