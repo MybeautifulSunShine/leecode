@@ -140,10 +140,10 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
          */
         return ((java.lang.Comparable<E>) e1).compareTo(e2);
     }
-
-    /**
+/*
+    *//**
      * 前序遍历
-     */
+     *//*
     public void preorderTraversal() {
         //从根结点开始
         preorderTraversal(root);
@@ -162,9 +162,9 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         preorderTraversal(node.right);
     }
 
-    /**
+    *//**
      * 中序遍历 (root节点是最中间的) 出来的结果是升序或者降序的
-     */
+     *//*
     public void inorderTraversal() {
         inorderTraversal(root);
     }
@@ -178,9 +178,9 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         inorderTraversal(node.right);
     }
 
-    /**
+    *//**
      * 后续遍历   父节点最后遍历
-     */
+     *//*
     public void postorderTraversal() {
         postorderTraversal(root);
     }
@@ -194,9 +194,9 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         System.out.println(node.element);
     }
 
-    /**
+    *//**
      * 层序遍历
-     */
+     *//*
     public void levelOrderTraversal() {
         if (null == root) {
             return;
@@ -219,6 +219,53 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
                 queue.offer(poll.right);
             }
         }
+    }*/
+
+    /**
+     * version2 把之前的方法都做成通过接口来访问的 而不是直接调用 ,不把参数暴露给外边
+     * 前序遍历
+     */
+    public void preorder(Visitor<E> visitor) {
+        if (visitor == null) return;
+        preorder(root, visitor);
+    }
+
+    private void preorder(Node<E> node, Visitor<E> visitor) {
+        if (node == null || visitor == null) return;
+        visitor.visit(node.element);
+        preorder(node.left, visitor);
+        preorder(node.right, visitor);
+    }
+
+    /**
+     * 中序遍历version2
+     *
+     * @param visitor
+     */
+    public void inorder(Visitor<E> visitor) {
+        if (visitor == null) return;
+        inorder(root, visitor);
+    }
+
+    private void inorder(Node<E> node, Visitor<E> visitor) {
+        if (node == null || visitor == null) return;
+
+        inorder(node.left, visitor);
+        visitor.visit(node.element);
+        inorder(node.right, visitor);
+    }
+
+    public void postorder(Visitor<E> visitor) {
+        if (visitor == null) return;
+        postorder(root, visitor);
+    }
+
+    private void postorder(Node<E> node, Visitor<E> visitor) {
+        if (node == null || visitor == null) return;
+
+        postorder(node.left, visitor);
+        postorder(node.right, visitor);
+        visitor.visit(node.element);
     }
 
 
@@ -233,10 +280,29 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         }
     }
 
-    //要先遍历所有的元素给我 Visitor 这个接口 由visitor告诉你应该怎么做
-
+    /**
+     * 要先遍历所有的元素给我 Visitor 这个接口 由visitor告诉你应该怎么做
+     * 因为里面的参数是element是不可让调用者知道的
+     */
     public void levelOrder(Visitor<E> visitor) {
+        if (root == null || visitor == null) return;
+        Queue<Node<E>> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            Node<E> node = queue.poll();
+            /**
+             * 真正的使用结点的内用
+             */
+            visitor.visit(node.element);
 
+            if (node.left != null) {
+                queue.offer(node.left);
+            }
+
+            if (node.right != null) {
+                queue.offer(node.right);
+            }
+        }
     }
 
     /**

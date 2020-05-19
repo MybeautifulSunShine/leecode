@@ -70,7 +70,7 @@ public class Main {
             bst.add(data[i]);
         }
         BinaryTrees.println(bst);
-        bst.levelOrderTraversal();
+//        bst.levelOrderTraversal();
 
 //		BinarySearchTree<Integer> bst = new BinarySearchTree<>();
 //		for (int i = 0; i < 10; i++) {
@@ -82,22 +82,25 @@ public class Main {
         // bst.levelOrderTraversal();
 
 		/*
-		 *       7
+         *       7
 		 *    4    9
 		    2   5
 		 */
+        /**
+         * 调用方法
+         */
+        bst.levelOrder(new BinarySearchTree.Visitor<Integer>() {
+            public void visit(Integer element) {
+                //遍历到使用每一个元素
+                System.out.print("_" + element + "_ ");
+            }
+        });
 
-//		bst.levelOrder(new Visitor<Integer>() {
-//			public void visit(Integer element) {
-//				System.out.print("_" + element + "_ ");
-//			}
-//		});
-
-//		bst.inorder(new Visitor<Integer>() {
-//			public void visit(Integer element) {
-//				System.out.print("_" + (element + 3) + "_ ");
-//			}
-//		});
+        bst.inorder(new BinarySearchTree.Visitor<Integer>() {
+            public void visit(Integer element) {
+                System.out.print("_" + (element + 3) + "_ ");
+            }
+        });
 
         // System.out.println(bst.height());
     }
