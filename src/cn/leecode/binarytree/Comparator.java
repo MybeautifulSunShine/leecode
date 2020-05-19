@@ -1,4 +1,4 @@
-package cn.leecode.printer;
+package cn.leecode.binarytree;
 
 /**
  * 新建一个比较器

@@ -1,4 +1,4 @@
-package cn.leecode.printer;
+package cn.leecode.binarytree;
 
 /**
  * 必须要有可比性
