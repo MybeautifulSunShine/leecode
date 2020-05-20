@@ -34,7 +34,7 @@ public class Main {
     }
 
     /**
-     * 测试 二叉树 并且打印相关数据
+     * 测试 tree 并且打印相关数据
      */
     static void test1() {
         Integer data[] = new Integer[]{

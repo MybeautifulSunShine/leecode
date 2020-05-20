@@ -1,4 +1,4 @@
-package 二叉树;
+package src.tree;
 
 /**
  * 描述:
@@ -8,5 +8,11 @@ package 二叉树;
  * @create 2020-05-20 18:25
  */
 public class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
 
+    TreeNode(int x) {
+        val = x;
+    }
 }

@@ -407,6 +407,34 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
     }
 
     /**
+     * 前序结点 : 中序遍历中,求某一个结点的前一个结点是什么
+     * 只要是暴露结点的操作都是私有的方法
+     * 条件
+     * 左,右 右
+     * node.left!=null
+     * 终止条件right 为 null
+     * 左子树等于 null 但是parent!=null
+     * 某一个parent的right 就是它的前驱
+     */
+    private Node<E> predeessor(Node<E> node) {
+        if (node == null) {
+            return node;
+        }
+        //发现左结点!= null 不断的往右寻找
+        //前驱结点在左子树当中
+        if (node.left != null) {
+            Node<E> p = node.left;
+            while (p.right != null) {
+                p = node.right;
+            }
+            return p;
+        }
+        //
+
+        return null;
+    }
+
+    /**
      * 要先遍历所有的元素给我 Visitor 这个接口 由visitor告诉你应该怎么做
      * 因为里面的参数是element是不可让调用者知道的
      */
