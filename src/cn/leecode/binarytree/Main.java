@@ -62,7 +62,9 @@ public class Main {
 
     static void test6() {
         Integer data[] = new Integer[]{
-                7, 4, 9, 2, 1, 3, 5, 9, 8, 11, 10, 12
+//                7, 4, 9, 2, 1, 3, 5, 9, 8, 11, 10, 12
+                //把 参数 按照完全二叉树的顺序 排列 并判断是不是
+                7, 4, 9, 2, 5
         };
 
         BinarySearchTree<Integer> bst = new BinarySearchTree<>();
@@ -70,6 +72,7 @@ public class Main {
             bst.add(data[i]);
         }
         BinaryTrees.println(bst);
+        System.out.println(bst.isComplete());
 //        bst.levelOrderTraversal();
 
 //		BinarySearchTree<Integer> bst = new BinarySearchTree<>();
@@ -89,7 +92,8 @@ public class Main {
         /**
          * 调用方法
          */
-        bst.levelOrder(new BinarySearchTree.Visitor<Integer>() {
+      /*  bst.levelOrder(new BinarySearchTree.Visitor<Integer>() {
+            @Override
             public void visit(Integer element) {
                 //遍历到使用每一个元素
                 System.out.print("_" + element + "_ ");
@@ -97,12 +101,13 @@ public class Main {
         });
 
         bst.inorder(new BinarySearchTree.Visitor<Integer>() {
+            @Override
             public void visit(Integer element) {
                 System.out.print("_" + (element + 3) + "_ ");
             }
-        });
+        });*/
 
-        // System.out.println(bst.height());
+//        System.out.println(bst.height1());
     }
 
 
@@ -134,9 +139,13 @@ public class Main {
 //        );
 //
 //        test1();
-
-        test5();
-
+        /**
+         * 调用高度
+         */
+        test6();
+        /**
+         * 判断一个二叉树是否是完全二叉树
+         */
     }
 
 

@@ -106,7 +106,7 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         }
         size++;
     }
-// 删除元素
+    // 删除元素
 
     public void remove(E element) {
 
@@ -117,6 +117,116 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         return false;
     }
 
+    /**
+     * 通过层序遍历的方式来获取树的高度
+     * 规律 : 每一层的最后一个节点出队的时候  队列里面保存的是下一节点的数量
+     */
+    public int height() {
+        if (root == null) {
+            return 0;
+        }
+        // 树的高度
+        int height = 0;
+        // 存储着每一层的元素数量  默认root的数量为0
+        int levelSize = 1;
+        Queue<Node<E>> queue = new LinkedList<>();
+        //一进来就把根结点入队
+        queue.offer(root);
+
+        while (!queue.isEmpty()) {
+            Node<E> node = queue.poll();
+            //没出队一个元素则里面的数量-1
+            levelSize--;
+
+            if (node.left != null) {
+                queue.offer(node.left);
+            }
+
+            if (node.right != null) {
+                queue.offer(node.right);
+            }
+            // 意味着即将要访问下一层
+            if (levelSize == 0) {
+                //赋值
+                levelSize = queue.size();
+                //访问完一层高度就自动++
+                height++;
+            }
+        }
+
+        return height;
+    }
+
+    /**
+     * 判断是不是完全的二叉树
+     * 树为null 返回false
+     */
+    public boolean isComplete() {
+        if (root == null) return false;
+        Queue<Node<E>> queue = new LinkedList<>();
+        queue.offer(root);
+        /**
+         * 是不是叶子节点
+         */
+        boolean leaf = false;
+
+        while (!queue.isEmpty()) {
+            Node<E> node = queue.poll();
+            if (leaf && !node.isLeaf()) {
+                return false;
+            }
+            if (node.hasTwoChildren()) {
+                queue.offer(node.left);
+                queue.offer(node.right);
+            } else if (node.left == null && node.right != null) {
+                return false;
+            } else {
+                //后面遍历的节点必须是叶子节点
+                leaf = true;
+            }
+
+        }
+        return leaf;
+    }
+
+    /**
+     * 计算节点的高度 version1
+     *
+     * @return 高度
+     */
+    public int height1() {
+        return height1(root);
+    }
+
+    /**
+     * 获取一个 节点的高度 递归的方式
+     */
+    private int height1(Node<E> node) {
+        if (node == null) return 0;
+        return 1 + Math.max(height1(node.right), height1(node.left));
+    }
+
+
+    /**
+     * 实现默认的打印的方法
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        toString(root, sb, "");
+        return sb.toString();
+    }
+
+    /**
+     * 调用打印的方法
+     */
+    private void toString(Node<E> node, StringBuilder sb, String prefix) {
+        if (node == null) return;
+
+        toString(node.left, sb, prefix + "L---");
+        sb.append(prefix).append(node.element).append("\n");
+        toString(node.right, sb, prefix + "R---");
+    }
 
     /**
      * @return 返回值等于0，代表e1和e2相等；返回值大于0，代表e1大于e2；返回值小于于0，代表e1小于e2
@@ -140,9 +250,9 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
          */
         return ((java.lang.Comparable<E>) e1).compareTo(e2);
     }
-/*
-    *//**
-     * 前序遍历
+    /*
+     *//**
+     * 前序遍历  version1
      *//*
     public void preorderTraversal() {
         //从根结点开始
@@ -225,13 +335,18 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
      * version2 把之前的方法都做成通过接口来访问的 而不是直接调用 ,不把参数暴露给外边
      * 前序遍历
      */
+
     public void preorder(Visitor<E> visitor) {
-        if (visitor == null) return;
+        if (visitor == null) {
+            return;
+        }
         preorder(root, visitor);
     }
 
     private void preorder(Node<E> node, Visitor<E> visitor) {
-        if (node == null || visitor == null) return;
+        if (node == null || visitor == null) {
+            return;
+        }
         visitor.visit(node.element);
         preorder(node.left, visitor);
         preorder(node.right, visitor);
@@ -243,20 +358,31 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
      * @param visitor
      */
     public void inorder(Visitor<E> visitor) {
-        if (visitor == null) return;
+        if (visitor == null) {
+            return;
+        }
         inorder(root, visitor);
     }
 
     private void inorder(Node<E> node, Visitor<E> visitor) {
-        if (node == null || visitor == null) return;
+        if (node == null || visitor == null) {
+            return;
+        }
 
         inorder(node.left, visitor);
         visitor.visit(node.element);
         inorder(node.right, visitor);
     }
 
+    /**
+     * 后续遍历
+     *
+     * @param visitor
+     */
     public void postorder(Visitor<E> visitor) {
-        if (visitor == null) return;
+        if (visitor == null) {
+            return;
+        }
         postorder(root, visitor);
     }
 
@@ -285,7 +411,9 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
      * 因为里面的参数是element是不可让调用者知道的
      */
     public void levelOrder(Visitor<E> visitor) {
-        if (root == null || visitor == null) return;
+        if (root == null || visitor == null) {
+            return;
+        }
         Queue<Node<E>> queue = new LinkedList<>();
         queue.offer(root);
         while (!queue.isEmpty()) {
@@ -324,6 +452,20 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         public Node(E element, Node<E> parent) {
             this.element = element;
             this.parent = parent;
+        }
+
+        /**
+         * 判断是不是叶子节点
+         */
+        public boolean isLeaf() {
+            return left == null && right == null;
+        }
+
+        /**
+         * 判断是否是有两个子节点
+         */
+        public boolean hasTwoChildren() {
+            return left != null && right != null;
         }
     }
 
