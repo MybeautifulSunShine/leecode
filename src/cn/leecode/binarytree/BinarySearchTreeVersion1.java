@@ -151,7 +151,7 @@ public class BinarySearchTreeVersion1<E> implements BinaryTreeInfo {
 
     public void preorderTraversal(Node<E> node) {
         //访问这个节点
-        if (node.element == null) {
+        if (node == null) {
             return;
         }
         //中节点
@@ -186,6 +186,7 @@ public class BinarySearchTreeVersion1<E> implements BinaryTreeInfo {
     }
 
     public void postorderTraversal(Node<E> node) {
+
         if (node == null) {
             return;
         }

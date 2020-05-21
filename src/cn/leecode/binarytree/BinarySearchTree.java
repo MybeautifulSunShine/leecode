@@ -429,9 +429,38 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
             }
             return p;
         }
-        //
+        //从父节点 祖父节点中寻找前驱节点 没有前驱节点
+        while (node.parent != null && node == node.parent.left) {
+            node = node.parent;
+        }
+        //循环结束  1 paret == null
+        //node =node.parent.right
+        return node.parent;
+    }
 
-        return null;
+    /**
+     * 后续节点 ,求某个节点的后一个节点
+     * 逻辑跟上面的一样 但是确实相反的
+     */
+    private Node<E> successor(Node<E> node) {
+        if (node == null) {
+            return node;
+        }
+        /**
+         * 提取右节点
+         */
+        Node<E> p = node.right;
+        if (p != null) {
+            while (p.left != null) {
+                p = node.left;
+            }
+            return p;
+        }
+        //从父节点 祖父节点中寻找前驱节点 没有前驱节点
+        while (node.parent != null && node == node.parent.right) {
+            node = node.parent;
+        }
+        return node.parent;
     }
 
     /**

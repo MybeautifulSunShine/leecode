@@ -37,16 +37,28 @@ public class Main {
      * 测试 tree 并且打印相关数据
      */
     static void test1() {
+//        Integer data[] = new Integer[]{
+//                7, 4, 9, 2, 5, 8, 11, 3, 12, 1
+//        };
+//
+//        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+//        for (int i = 0; i < data.length; i++) {
+//            bst.add(data[i]);
+//        }
+//
+//        BinaryTrees.println(bst);
         Integer data[] = new Integer[]{
                 7, 4, 9, 2, 5, 8, 11, 3, 12, 1
         };
 
-        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+        BinarySearchTreeVersion1<Integer> bst = new BinarySearchTreeVersion1<>();
         for (int i = 0; i < data.length; i++) {
             bst.add(data[i]);
         }
 
         BinaryTrees.println(bst);
+        bst.postorderTraversal();
+
     }
 
     static void test5() {
@@ -138,14 +150,15 @@ public class Main {
 //                (p1, p2) -> p1.getAge().compareTo(p2.getAge())
 //        );
 //
-//        test1();
+        test1();
         /**
          * 调用高度
          */
-        test6();
+//        test6();
         /**
          * 判断一个二叉树是否是完全二叉树
          */
+
     }
 
 
