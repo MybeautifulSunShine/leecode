@@ -57,13 +57,16 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         return size == 0;
     }
 
-    // 清空所有元素
+    /**
+     * 清空所有元素
+     */
     public void clear() {
-
+        root = null;
+        size = 0;
     }
 
     /**
-     * // 添加元素
+     * 添加元素
      */
     public void add(E element) {
         //先确定在那个位置
@@ -106,15 +109,99 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         }
         size++;
     }
-    // 删除元素
+
+    /**
+     * 删除元素
+     *
+     * @param element
+     */
 
     public void remove(E element) {
+        //先根据元素找到这个节点
+        //在根据remove方法删除掉
+        remove(node(element));
+    }
+
+    /**
+     * 删除的真正方法
+     */
+    private void remove(Node<E> node) {
+        if (node == null) {
+            return;
+        }
+        size--;
+        //判断度的大小查看度为几
+        //度为2   找到前序 和后继 删除对应的节点
+        if (node.hasTwoChildren()) {
+            //找到前驱或者后继
+            Node<E> s = successor(node);
+//            Node<E> s = predeessor(node);
+            //用后继节点的值覆盖度为2节点的值
+            node.element = s.element;
+            //删除后继节点  指向节点
+            node = s;
+        }
+        //删除node 度为0 或者 度为 1 节点
+        Node<E> replacement = node.left != null ? node.left : node.right;
+        if (replacement != null) {
+            //node 是度为1的节点 用左边或者右边取代要删除的节点
+            //更改parent
+            replacement.parent = node.parent;
+            if (node.parent == null) {
+                //如果删除的是根结点的话 根结点直接指向要删除的子节点
+                root = replacement;
+                //parent 的left或right的指向  取决于 要删除的节点是 父节点的左边还是右边
+                //如果删的节点是右边指向
+            } else if (node == node.parent.left) {
+                node.parent.left = replacement;
+            } else if (node == node.parent.right) {
+                node.parent.right = replacement;
+            }
+        } else if (node.parent == null) {
+            //node是叶子节点 并且是根结点
+            root = null;
+        } else {
+            //是叶子节点 但不是根结点
+            if (node == node.parent.left) {
+                node.parent.left = null;
+            } else {
+                node.parent.right = null;
+            }
+        }
 
     }
 
-    // 是否包含某元素
+    /**
+     * 找到节点的方法
+     *
+     * @param element
+     */
+    private Node<E> node(E element) {
+        Node<E> node = root;
+        while (node != null) {
+            int cmp = compare(element, node.element);
+            //相等
+            if (cmp == 0) {
+                return node;
+            }
+            //意味着要找的元素比当前大 就去右边去找
+            if (cmp > 0) {
+                node = node.right;
+            } else {
+                //去左子树里面去找
+                node = node.left;
+            }
+        }
+        //不存在返回null
+        return null;
+    }
+
+
+    /**
+     * 是否包含某元素
+     */
     public boolean contains(E element) {
-        return false;
+        return node(element) != null;
     }
 
     /**
@@ -202,7 +289,9 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
      * 获取一个 节点的高度 递归的方式
      */
     private int height1(Node<E> node) {
-        if (node == null) return 0;
+        if (node == null) {
+            return 0;
+        }
         return 1 + Math.max(height1(node.right), height1(node.left));
     }
 
@@ -418,14 +507,14 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
      */
     private Node<E> predeessor(Node<E> node) {
         if (node == null) {
-            return node;
+            return null;
         }
         //发现左结点!= null 不断的往右寻找
         //前驱结点在左子树当中
         if (node.left != null) {
             Node<E> p = node.left;
             while (p.right != null) {
-                p = node.right;
+                p = p.right;
             }
             return p;
         }
@@ -444,7 +533,7 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
      */
     private Node<E> successor(Node<E> node) {
         if (node == null) {
-            return node;
+            return null;
         }
         /**
          * 提取右节点
@@ -452,7 +541,7 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         Node<E> p = node.right;
         if (p != null) {
             while (p.left != null) {
-                p = node.left;
+                p = p.left;
             }
             return p;
         }
@@ -462,6 +551,7 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         }
         return node.parent;
     }
+
 
     /**
      * 要先遍历所有的元素给我 Visitor 这个接口 由visitor告诉你应该怎么做

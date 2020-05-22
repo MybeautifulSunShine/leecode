@@ -74,9 +74,9 @@ public class Main {
 
     static void test6() {
         Integer data[] = new Integer[]{
-//                7, 4, 9, 2, 1, 3, 5, 9, 8, 11, 10, 12
+                7, 4, 9, 2, 1, 3, 5, 9, 8, 11, 12
                 //把 参数 按照完全二叉树的顺序 排列 并判断是不是
-                7, 4, 9, 2, 5
+//                7, 4, 9, 2, 5
         };
 
         BinarySearchTree<Integer> bst = new BinarySearchTree<>();
@@ -84,7 +84,21 @@ public class Main {
             bst.add(data[i]);
         }
         BinaryTrees.println(bst);
-        System.out.println(bst.isComplete());
+        /**
+         * 删除度为0
+         */
+//        bst.remove(5);
+//        BinaryTrees.println(bst);
+        //删除度为2
+//        bst.remove(9);
+//        BinaryTrees.println(bst);
+        //删除度为1
+//        bst.remove(11);
+//        BinaryTrees.println(bst);
+//        //删除跟节点
+        bst.remove(7);
+        BinaryTrees.println(bst);
+//        System.out.println(bst.isComplete());
 //        bst.levelOrderTraversal();
 
 //		BinarySearchTree<Integer> bst = new BinarySearchTree<>();
@@ -150,7 +164,7 @@ public class Main {
 //                (p1, p2) -> p1.getAge().compareTo(p2.getAge())
 //        );
 //
-        test1();
+        test6();
         /**
          * 调用高度
          */
