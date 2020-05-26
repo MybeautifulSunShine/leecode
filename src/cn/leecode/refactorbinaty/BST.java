@@ -1,4 +1,4 @@
-package cn.leecode.refactorBinaty;
+package cn.leecode.refactorbinaty;
 
 import java.util.Comparator;
 

@@ -1,7 +1,7 @@
-package cn.leecode.avl;
+package cn.leecode.avltree;
 
 import cn.leecode.binarytree.printer.BinaryTrees;
-import cn.leecode.refactorBinaty.BST;
+import cn.leecode.refactorbinaty.BST;
 
 import java.util.ArrayList;
 import java.util.List;
