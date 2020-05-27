@@ -74,22 +74,41 @@ public class AvlTree<E> extends BST<E> {
         if (parent.isLeftChild()) {
             //判断子节点是否是左节点
             if (node.isLeftChild()) {
-                //LL
+                //LL 对g进行右旋转
+                rotateRight(node);
             } else {
-                //lR
+                //LR
+                rotateLeft(parent);
+                rotateRight(grand);
             }
-        } else { //R
+        } else {
+            //R
             if (node.isLeftChild()) {
-                //RL
-
-
+                //RL 先对parent进行右旋转
+                rotateRight(parent);
+                rotateLeft(grand);
             } else {
                 //RR
-
+                rotateLeft(grand);
             }
         }
     }
 
+    /**
+     * 左旋转
+     */
+    private void rotateLeft(Node<E> node) {
+
+    }
+
+    /**
+     * 进行右旋转
+     *
+     * @param node
+     */
+    private void rotateRight(Node<E> node) {
+
+    }
 
     /**
      * 判断是否平衡
@@ -138,6 +157,7 @@ public class AvlTree<E> extends BST<E> {
             //自己的高度 等于1 + 上  左子树 或者右子树中 最高的树
             height = 1 + Math.max(leftHeight, rightHeight);
         }
+
 
         public Node<E> tollerChild() {
             //强制类型装换
