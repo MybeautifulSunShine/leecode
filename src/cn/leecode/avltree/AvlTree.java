@@ -95,19 +95,68 @@ public class AvlTree<E> extends BST<E> {
     }
 
     /**
-     * 左旋转
+     * 左旋转 grand传进来对他进行左旋转
      */
-    private void rotateLeft(Node<E> node) {
+    private void rotateLeft(Node<E> grand) {
 
+        //怎么拿到p  现在传给我一个G 传给我那个就
+        Node<E> parent = grand.right;
+
+        //相当于T1
+        Node<E> child = grand.right = parent.left;
+        parent.left = grand;
+        /**
+         *  维护父节点的指向 以及高度
+         */
+        afterRotate(grand, parent, child);
     }
 
     /**
      * 进行右旋转
      *
-     * @param node
+     * @param grand
      */
-    private void rotateRight(Node<E> node) {
+    private void rotateRight(Node<E> grand) {
+        Node<E> parent = grand.left;
+        Node<E> chind = parent.right;
+        grand.left = chind;
+        parent.right = grand;
+        /**
+         * 维护父节点 以及指向
+         */
+        afterRotate(grand, parent, chind);
+    }
 
+    /**
+     * 抽取公共的代码
+     * 旋转之后做的事情
+     */
+    private void afterRotate(Node<E> grand, Node<E> parent, Node<E> child) {
+
+        //更新parent   t1的parent发生变化 p 与g的patent
+        parent.parent = grand.parent;
+        /**
+         * 判断grand的结点
+         */
+        if (grand.isLeftChild()) {
+            grand.parent.left = parent;
+        } else if (grand.isRightChild()) {
+            grand.parent.right = parent;
+        } else {
+            //grand是跟结点 让parent成为这个子树的根节点
+            root = parent;
+        }
+
+        //更新child 的parent
+        if (child != null) {
+            child.parent = grand;
+        }
+
+        //更新grand 的parent
+        grand.parent = parent;
+        //更新高度  先更新矮的结点
+        updateHeight(grand);
+        updateHeight(parent);
     }
 
     /**
@@ -140,7 +189,7 @@ public class AvlTree<E> extends BST<E> {
          */
         public int balanceFactor() {
             //强制类型装换
-            int leftHeight = left == null ? 0 : ((AVLNode<E>) right).height;
+            int leftHeight = left == null ? 0 : ((AVLNode<E>) left).height;
             //右子树的高度
             int rightHeight = right == null ? 0 : ((AVLNode<E>) right).height;
             return leftHeight - rightHeight;
@@ -151,7 +200,7 @@ public class AvlTree<E> extends BST<E> {
          */
         public void updateHeight() {
             //强制类型装换
-            int leftHeight = left == null ? 0 : ((AVLNode<E>) right).height;
+            int leftHeight = left == null ? 0 : ((AVLNode<E>) left).height;
             //右子树的高度
             int rightHeight = right == null ? 0 : ((AVLNode<E>) right).height;
             //自己的高度 等于1 + 上  左子树 或者右子树中 最高的树

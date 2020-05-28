@@ -12,7 +12,7 @@ public class Main {
 
     static void test1() {
         Integer data[] = new Integer[]{
-                67, 52, 92, 96, 53, 95, 13, 63, 34, 82, 76, 54, 9, 68, 39
+                35, 11, 49, 52, 3, 54, 2, 15, 64
         };
 
         AvlTree<Integer> avl = new AvlTree<>();
