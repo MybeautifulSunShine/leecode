@@ -12,7 +12,7 @@ public class Main {
 
     static void test1() {
         Integer data[] = new Integer[]{
-                35, 11, 49, 52, 3, 54, 2, 15, 64
+                67, 52, 92, 96, 53, 95, 13, 63, 34, 82, 76, 54, 9, 68, 39
         };
 
         AvlTree<Integer> avl = new AvlTree<>();
@@ -23,15 +23,15 @@ public class Main {
 //			System.out.println("---------------------------------------");
         }
 
-//		for (int i = 0; i < data.length; i++) {
-//			avl.remove(data[i]);
-//			System.out.println("【" + data[i] + "】");
-//			BinaryTrees.println(avl);
-//			System.out.println("---------------------------------------");
-//		}
+        for (int i = 0; i < data.length; i++) {
+            avl.remove(data[i]);
+            System.out.println("【" + data[i] + "】");
+            BinaryTrees.println(avl);
+            System.out.println("---------------------------------------");
+        }
+//
 
 
-        BinaryTrees.println(avl);
     }
 
     static void test2() {

@@ -10,7 +10,8 @@ import java.util.Queue;
  * 描述:
  * 二叉搜索树
  * 限制改 接口的类型
- * version 1 BinarySearchTree<E extend Comparable >
+ * version 1
+ * BinarySearchTree<E extend Comparable >
  * 1 E 必须具备可比较性
  * version 2 实现了打印的接口 并且告诉相关方法
  *

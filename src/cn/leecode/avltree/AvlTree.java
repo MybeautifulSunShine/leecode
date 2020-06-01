@@ -49,6 +49,27 @@ public class AvlTree<E> extends BST<E> {
     }
 
     /**
+     * 删除之后的平衡处理
+     *
+     * @param node 被删除的节点
+     */
+    @Override
+    protected void afterRemove(Node<E> node) {
+        //不断的往上找查看失衡的节点
+        while ((node = node.parent) != null) {
+            //判断是否失去平衡
+            if (isBalance(node)) {
+                //更新高度
+                updateHeight(node);
+            } else {
+                //恢复平衡
+                rebalance(node);
+            }
+        }
+
+    }
+
+    /**
      * 实现他的方法返回一个自己需要类型的节点
      *
      * @return
@@ -68,14 +89,14 @@ public class AvlTree<E> extends BST<E> {
         //p是 g这个节点中左右最高的节点
         //n 是p 最右子树高度里面最高的
         Node<E> parent = ((AVLNode<E>) grand).tallerChild();
-        Node<E> node = ((AVLNode<E>) grand).tallerChild();
+        Node<E> node = ((AVLNode<E>) parent).tallerChild();
         //旋转方向的判断
         //L
         if (parent.isLeftChild()) {
             //判断子节点是否是左节点
             if (node.isLeftChild()) {
                 //LL 对g进行右旋转
-                rotateRight(node);
+                rotateRight(grand);
             } else {
                 //LR
                 rotateLeft(parent);
