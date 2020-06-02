@@ -1,4 +1,4 @@
-package cn.leecode.avltree;
+package cn.leecode.rbtree;
 
 import java.util.Comparator;
 
@@ -163,6 +163,23 @@ public class BST<E> extends BinaryTree<E> {
         }
         return ((Comparable<E>) e1).compareTo(e2);
     }
+
+    /**
+     * @Author:HeGaoJian
+     * @Description: 返回兄弟节点
+     * @Date: 2020/6/2 18:26
+     */
+
+    public Node<E> sibling(Node<E> node) {
+        if (node.isLeftChild()) {
+            return node.right;
+        }
+        if (node.isRightChild()) {
+            return node.left;
+        }
+        return null;
+    }
+
 
     private void elementNotNullCheck(E element) {
         if (element == null) {

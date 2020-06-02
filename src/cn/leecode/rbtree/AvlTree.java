@@ -1,4 +1,4 @@
-package cn.leecode.avltree;
+package cn.leecode.rbtree;
 
 import java.util.Comparator;
 
@@ -42,7 +42,9 @@ public class AvlTree<E> extends BST<E> {
                 rebalance(node);
                 //整棵树恢复平衡
                 break;
+
             }
+
         }
     }
 
@@ -195,8 +197,7 @@ public class AvlTree<E> extends BST<E> {
         f.parent = d;
         updateHeight(d);
 
-        //d f b parent主要的空的
-
+        //d f b 主要的空的
     }
 
     /**
