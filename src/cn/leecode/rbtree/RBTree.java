@@ -130,9 +130,14 @@ public class RBTree<E> extends BBST<E> {
         /**
          * delete node is black childNode
          */
-
-
-
+        /**
+         * take if brother color
+         */
+        /**
+         *  Come here must is childNode
+         *  node is childNode
+         */
+        Node<E> sbling = node.sibling();
 
 
     }
