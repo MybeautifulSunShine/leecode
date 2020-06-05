@@ -208,6 +208,9 @@ public class BinaryTree<E> implements BinaryTreeInfo {
             return parent != null && this == parent.right;
         }
 
+        /**
+         * get node brother
+         */
         public Node<E> sibling() {
             if (isLeftChild()) {
                 return parent.right;
