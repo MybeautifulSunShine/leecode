@@ -43,7 +43,7 @@ public class RBTree<E> extends BBST<E> {
             return;
         }
         /**
-         * 判断如果是黑色节点方法直接方法
+         * 判断如果是黑色节点方法直接添加
          */
         if (isBlack(parent)) {
             return;
