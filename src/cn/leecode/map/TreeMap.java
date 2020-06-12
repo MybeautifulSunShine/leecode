@@ -170,8 +170,8 @@ public class TreeMap<K, V> implements Map<K, V> {
         size--;
 
         V oldValue = node.value;
-
-        if (node.hasTwoChildren()) { // 度为2的节点
+        // 度为2的节点
+        if (node.hasTwoChildren()) {
             // 找到后继节点
             Node<K, V> s = successor(node);
             // 用后继节点的值覆盖度为2的节点的值
@@ -381,7 +381,8 @@ public class TreeMap<K, V> implements Map<K, V> {
         }
 
         // 叔父节点不是红色
-        if (parent.isLeftChild()) { // L
+        // L
+        if (parent.isLeftChild()) {
             if (node.isLeftChild()) { // LL
                 black(parent);
             } else { // LR
