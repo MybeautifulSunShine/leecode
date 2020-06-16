@@ -1,24 +1,32 @@
 package cn.leecode.map;
 
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Objects;
 
-@SuppressWarnings({"unchecked", "unused"})
-public class TreeMap<K, V> implements Map<K, V> {
+/**
+ * 描述:
+ * 自己实现的HashMap
+ *
+ * @author HeGaoJian
+ * @version 1.0
+ * @create 2020-06-16 18:28
+ */
+public class HashMap<K, V> implements Map<K, V> {
     private static final boolean RED = false;
     private static final boolean BLACK = true;
     private int size;
-    private Node<K, V> root;
-    private Comparator<K> comparator;
+    /**
+     * 存放的是每一颗红黑树的根结点
+     */
+    private Node<K, V>[] table;
+    private static final int DEFAULT_CAPACITY = 1 << 4;
 
-    public TreeMap() {
-        this(null);
+    public HashMap() {
+        /**
+         * 默认2的4次方
+         */
+        table = new Node[DEFAULT_CAPACITY];
     }
 
-    public TreeMap(Comparator<K> comparator) {
-        this.comparator = comparator;
-    }
 
     @Override
     public int size() {
@@ -32,31 +40,39 @@ public class TreeMap<K, V> implements Map<K, V> {
 
     @Override
     public void clear() {
-        root = null;
+        if (size == 0) {
+            return;
+        }
+        for (int i = 0; i < table.length; i++) {
+            table[i] = null;
+        }
         size = 0;
     }
 
     @Override
     public V put(K key, V value) {
-        keyNotNullCheck(key);
-
-        // 添加第一个节点
+        /**
+         * 计算索引  放到哪个桶里面去
+         */
+        int index = index(key);
+        //look has not root node (take index 位置的红黑树跟节点)
+        Node<K, V> root = table[index];
         if (root == null) {
             root = new Node<>(key, value, null);
+            table[index] = root;
             size++;
-
-            // 新添加节点之后的处理
             afterPut(root);
             return null;
         }
 
-        // 添加的不是第一个节点
+        // add new  node is not parent node
         // 找到父节点
         Node<K, V> parent = root;
         Node<K, V> node = root;
         int cmp = 0;
+        int h1 = key == null ? 0 : key.hashCode();
         do {
-            cmp = compare(key, node.key);
+            cmp = compare(key, node.key, h1, node.hash);
             parent = node;
             if (cmp > 0) {
                 node = node.right;
@@ -82,126 +98,32 @@ public class TreeMap<K, V> implements Map<K, V> {
         // 新添加节点之后的处理
         afterPut(newNode);
         return null;
+
     }
 
-    @Override
-    public V get(K key) {
-        Node<K, V> node = node(key);
-        return node != null ? node.value : null;
+    private int compare(K k1, K k2) {
+        //compare  to hashCode
+        int h1 = k1 == null ? 0 : k1.hashCode();
+        int h2 = k2 == null ? 0 : k2.hashCode();
+        return 0;
     }
 
-    @Override
-    public V remove(K key) {
-        return remove(node(key));
-    }
-
-    @Override
-    public boolean containsKey(K key) {
-        return node(key) != null;
-    }
-
-    @Override
-    public boolean containsValue(V value) {
-        if (root == null) {
-            return false;
+    /**
+     * @param k1
+     * @param k2
+     * @param h1 key 1 hashCode
+     * @param h2 key 2 hashCode
+     * @return hashCode
+     */
+    private int compare(K k1, K k2, int h1, int h2) {
+        //compare  to hashCode
+        int result = h1 - h2;
+        if (result != 0) {
+            return result;
         }
-
-        Queue<Node<K, V>> queue = new LinkedList<>();
-        queue.offer(root);
-
-        while (!queue.isEmpty()) {
-            Node<K, V> node = queue.poll();
-            if (valEquals(value, node.value)) {
-                return true;
-            }
-
-            if (node.left != null) {
-                queue.offer(node.left);
-            }
-
-            if (node.right != null) {
-                queue.offer(node.right);
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public void traversal(Visitor<K, V> visitor) {
-        if (visitor == null) {
-            return;
-        }
-        traversal(root, visitor);
-    }
-
-    private void traversal(Node<K, V> node, Visitor<K, V> visitor) {
-        if (node == null || visitor.stop) {
-            return;
-        }
-
-        traversal(node.left, visitor);
-        if (visitor.stop) {
-            return;
-        }
-        visitor.visit(node.key, node.value);
-        traversal(node.right, visitor);
-    }
-
-    private boolean valEquals(V v1, V v2) {
-        return v1 == null ? v2 == null : v1.equals(v2);
-    }
-
-    private V remove(Node<K, V> node) {
-        if (node == null) {
-            return null;
-        }
-
-        size--;
-
-        V oldValue = node.value;
-
-        if (node.hasTwoChildren()) { // 度为2的节点
-            // 找到后继节点
-            Node<K, V> s = successor(node);
-            // 用后继节点的值覆盖度为2的节点的值
-            node.key = s.key;
-            node.value = s.value;
-            // 删除后继节点
-            node = s;
-        }
-
-        // 删除node节点（node的度必然是1或者0）
-        Node<K, V> replacement = node.left != null ? node.left : node.right;
-
-        if (replacement != null) { // node是度为1的节点
-            // 更改parent
-            replacement.parent = node.parent;
-            // 更改parent的left、right的指向
-            if (node.parent == null) { // node是度为1的节点并且是根节点
-                root = replacement;
-            } else if (node == node.parent.left) {
-                node.parent.left = replacement;
-            } else { // node == node.parent.right
-                node.parent.right = replacement;
-            }
-
-            // 删除节点之后的处理
-            afterRemove(replacement);
-        } else if (node.parent == null) { // node是叶子节点并且是根节点
-            root = null;
-        } else { // node是叶子节点，但不是根节点
-            if (node == node.parent.left) {
-                node.parent.left = null;
-            } else { // node == node.parent.right
-                node.parent.right = null;
-            }
-
-            // 删除节点之后的处理
-            afterRemove(node);
-        }
-
-        return oldValue;
+        // compare eq method
+        Objects.equals(k1, k2);
+        return 0;
     }
 
     private void afterRemove(Node<K, V> node) {
@@ -284,65 +206,8 @@ public class TreeMap<K, V> implements Map<K, V> {
         }
     }
 
-    private Node<K, V> predecessor(Node<K, V> node) {
-        if (node == null) return null;
-
-        // 前驱节点在左子树当中（left.right.right.right....）
-        Node<K, V> p = node.left;
-        if (p != null) {
-            while (p.right != null) {
-                p = p.right;
-            }
-            return p;
-        }
-
-        // 从父节点、祖父节点中寻找前驱节点
-        while (node.parent != null && node == node.parent.left) {
-            node = node.parent;
-        }
-
-        // node.parent == null
-        // node == node.parent.right
-        return node.parent;
-    }
-
-    private Node<K, V> successor(Node<K, V> node) {
-        if (node == null) return null;
-
-        // 前驱节点在左子树当中（right.left.left.left....）
-        Node<K, V> p = node.right;
-        if (p != null) {
-            while (p.left != null) {
-                p = p.left;
-            }
-            return p;
-        }
-
-        // 从父节点、祖父节点中寻找前驱节点
-        while (node.parent != null && node == node.parent.right) {
-            node = node.parent;
-        }
-
-        return node.parent;
-    }
-
-    private Node<K, V> node(K key) {
-        Node<K, V> node = root;
-        while (node != null) {
-            int cmp = compare(key, node.key);
-            if (cmp == 0) return node;
-            if (cmp > 0) {
-                node = node.right;
-            } else { // cmp < 0
-                node = node.left;
-            }
-        }
-        return null;
-    }
-
     private void afterPut(Node<K, V> node) {
         Node<K, V> parent = node.parent;
-
         // 添加的是根节点 或者 上溢到达了根节点
         if (parent == null) {
             black(node);
@@ -356,7 +221,8 @@ public class TreeMap<K, V> implements Map<K, V> {
         Node<K, V> uncle = parent.sibling();
         // 祖父节点
         Node<K, V> grand = red(parent.parent);
-        if (isRed(uncle)) { // 叔父节点是红色【B树节点上溢】
+        // 叔父节点是红色【B树节点上溢】
+        if (isRed(uncle)) {
             black(parent);
             black(uncle);
             // 把祖父节点当做是新添加的节点
@@ -408,7 +274,7 @@ public class TreeMap<K, V> implements Map<K, V> {
         } else if (grand.isRightChild()) {
             grand.parent.right = parent;
         } else { // grand是root节点
-            root = parent;
+//            table[index(grand)] = parent;
         }
 
         // 更新child的parent
@@ -421,9 +287,7 @@ public class TreeMap<K, V> implements Map<K, V> {
     }
 
     private Node<K, V> color(Node<K, V> node, boolean color) {
-        if (node == null) {
-            return node;
-        }
+        if (node == null) return node;
         node.color = color;
         return node;
     }
@@ -448,20 +312,47 @@ public class TreeMap<K, V> implements Map<K, V> {
         return colorOf(node) == RED;
     }
 
-    private int compare(K e1, K e2) {
-        if (comparator != null) {
-            return comparator.compare(e1, e2);
-        }
-        return ((Comparable<K>) e1).compareTo(e2);
+    @Override
+    public V get(K key) {
+        return null;
     }
 
-    private void keyNotNullCheck(K key) {
+    @Override
+    public V remove(K key) {
+        return null;
+    }
+
+    @Override
+    public boolean containsKey(K key) {
+        return false;
+    }
+
+    @Override
+    public boolean containsValue(V value) {
+        return false;
+    }
+
+    @Override
+    public void traversal(Visitor<K, V> visitor) {
+
+    }
+
+    /**
+     * @Author: HeGaoJian
+     * @Description: 根据key生成对应的索引, (在桶数组中的位置)
+     * @Date: 2020/6/16 18:41
+     */
+
+    private int index(K key) {
         if (key == null) {
-            throw new IllegalArgumentException("key must not be null");
+            return 0;
         }
+        int hash = key.hashCode();
+        return (hash ^ (hash >>> 16)) & (table.length - 1);
     }
 
     private static class Node<K, V> {
+        int hash;
         K key;
         V value;
         boolean color = RED;
@@ -471,6 +362,7 @@ public class TreeMap<K, V> implements Map<K, V> {
 
         public Node(K key, V value, Node<K, V> parent) {
             this.key = key;
+            this.hash = key == null ? 0 : key.hashCode();
             this.value = value;
             this.parent = parent;
         }
@@ -499,7 +391,6 @@ public class TreeMap<K, V> implements Map<K, V> {
             if (isRightChild()) {
                 return parent.left;
             }
-
             return null;
         }
     }

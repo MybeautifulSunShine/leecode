@@ -1,5 +1,3 @@
-import java.util.*;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -33,6 +31,11 @@ public class Main {
 //            System.out.print(s + "   ");
 //        }
 //    }
-        System.out.println(0&1);
+//        int intBits = Float.floatToIntBits(6.21f);
+//        System.out.println(intBits);
+        Integer aa =  5489;
+//        System.out.println(Integer.toBinaryString(intBits));
+        System.out.println(aa.hashCode());
+        //double  和 float
     }
 }
