@@ -102,18 +102,14 @@ public class TreeMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean containsValue(V value) {
-        if (root == null) {
-            return false;
-        }
+        if (root == null) return false;
 
         Queue<Node<K, V>> queue = new LinkedList<>();
         queue.offer(root);
 
         while (!queue.isEmpty()) {
             Node<K, V> node = queue.poll();
-            if (valEquals(value, node.value)) {
-                return true;
-            }
+            if (valEquals(value, node.value)) return true;
 
             if (node.left != null) {
                 queue.offer(node.left);
@@ -129,21 +125,15 @@ public class TreeMap<K, V> implements Map<K, V> {
 
     @Override
     public void traversal(Visitor<K, V> visitor) {
-        if (visitor == null) {
-            return;
-        }
+        if (visitor == null) return;
         traversal(root, visitor);
     }
 
     private void traversal(Node<K, V> node, Visitor<K, V> visitor) {
-        if (node == null || visitor.stop) {
-            return;
-        }
+        if (node == null || visitor.stop) return;
 
         traversal(node.left, visitor);
-        if (visitor.stop) {
-            return;
-        }
+        if (visitor.stop) return;
         visitor.visit(node.key, node.value);
         traversal(node.right, visitor);
     }
@@ -153,9 +143,7 @@ public class TreeMap<K, V> implements Map<K, V> {
     }
 
     private V remove(Node<K, V> node) {
-        if (node == null) {
-            return null;
-        }
+        if (node == null) return null;
 
         size--;
 
@@ -213,9 +201,7 @@ public class TreeMap<K, V> implements Map<K, V> {
         }
 
         Node<K, V> parent = node.parent;
-        if (parent == null) {
-            return;
-        }
+        if (parent == null) return;
 
         // 删除的是黑色叶子节点【下溢】
         // 判断被删除的node是左还是右
@@ -421,9 +407,7 @@ public class TreeMap<K, V> implements Map<K, V> {
     }
 
     private Node<K, V> color(Node<K, V> node, boolean color) {
-        if (node == null) {
-            return node;
-        }
+        if (node == null) return node;
         node.color = color;
         return node;
     }
@@ -452,7 +436,7 @@ public class TreeMap<K, V> implements Map<K, V> {
         if (comparator != null) {
             return comparator.compare(e1, e2);
         }
-        return ((Comparable<K>) e1).compareTo(e2);
+        return ((Comparable<K>)e1).compareTo(e2);
     }
 
     private void keyNotNullCheck(K key) {
@@ -468,7 +452,6 @@ public class TreeMap<K, V> implements Map<K, V> {
         Node<K, V> left;
         Node<K, V> right;
         Node<K, V> parent;
-
         public Node(K key, V value, Node<K, V> parent) {
             this.key = key;
             this.value = value;
