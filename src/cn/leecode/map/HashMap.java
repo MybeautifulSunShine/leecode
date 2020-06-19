@@ -76,6 +76,8 @@ public class HashMap<K, V> implements Map<K, V> {
         K k1 = key;
         int h1 = k1 == null ? 0 : k1.hashCode();
         Node<K, V> result = null;
+        //is serchaed  or no
+        boolean serached = false;
         do {
             parent = node;
             K k2 = node.key;
@@ -89,8 +91,11 @@ public class HashMap<K, V> implements Map<K, V> {
                 cmp = 0;
             } else if (k1 != null && k2 != null
                     && k1.getClass() == k2.getClass()
-                    && k1 instanceof Comparable) {
-                cmp = ((Comparable) k1).compareTo(k2);
+                    && k1 instanceof Comparable
+                    && (cmp = ((Comparable) k1).compareTo(k2)) != 0) {
+
+            } else if (serached) {
+                cmp = System.identityHashCode(k1) - System.identityHashCode(k2);
             } else {
                 //new key value and is not impl Comparable  not eq
                 //before find  key by left and right
@@ -102,6 +107,7 @@ public class HashMap<K, V> implements Map<K, V> {
                     cmp = 0;
                 } else {
                     //not exist the key
+                    serached = true;
                     cmp = System.identityHashCode(k1) - System.identityHashCode(k2);
                 }
             }
@@ -113,6 +119,7 @@ public class HashMap<K, V> implements Map<K, V> {
                 V oldValue = node.value;
                 node.key = key;
                 node.value = value;
+                node.hash = h1;
                 return oldValue;
             }
         } while (node != null);
@@ -487,6 +494,8 @@ public class HashMap<K, V> implements Map<K, V> {
             // 用后继节点的值覆盖度为2的节点的值
             node.key = s.key;
             node.value = s.value;
+            //hash值也替换
+            node.hash = s.hash;
             // 删除后继节点
             node = s;
         }
@@ -559,6 +568,7 @@ public class HashMap<K, V> implements Map<K, V> {
          * save find result
          */
         Node<K, V> result = null;
+        int cmp = 0;
         while (node != null) {
             K k2 = node.key;
             int h2 = node.hash;
@@ -570,25 +580,25 @@ public class HashMap<K, V> implements Map<K, V> {
                 return node;
             } else if (k1 != null && k2 != null
                     && k1.getClass() == k2.getClass()
-                    && k1 instanceof Comparable) {
-                int cmp = ((Comparable) k1).compareTo(k2);
+                    && k1 instanceof Comparable
+                    && (cmp = ((Comparable) k1).compareTo(k2)) != 0) {
                 if (cmp > 0) {
                     node = node.right;
-                } else if (cmp < 0) {
-                    node = node.left;
                 } else {
-                    //相等
-                    return node;
+                    node = node.left;
                 }
                 //hashCode is same bug is not impl comparable  or null and not eq
                 //find to  left or righet
             } else if (node.right != null && (result = node(node.right, k1)) != null) {
                 return result;
-            } else if (node.left != null && (result = node(node.left, k1)) != null) {
+            } else {
+                node = node.left;
+            }
+          /*  } else if (node.left != null && (result = node(node.left, k1)) != null) {
                 return result;
             } else {
                 return null;
-            }
+            }*/
         }
         return null;
     }
