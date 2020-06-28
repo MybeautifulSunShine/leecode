@@ -10,15 +10,13 @@ import java.util.Comparator;
  * @version 1.0
  * @create 2020-06-28 18:26
  */
-public class BinaryHeap<E> implements Heap<E> {
+public class BinaryHeap<E> extends AbstractHeap<E> {
     private E[] elements;
-    private int size;
     //默认的元素
     private static final int DEFAULT_CAPACITY = 10;
-    private Comparator<E> comparable;
 
     public BinaryHeap(Comparator<E> comparable) {
-        this.comparable = comparable;
+        super(comparable);
         this.elements = (E[]) new Object[DEFAULT_CAPACITY];
     }
 
@@ -26,15 +24,6 @@ public class BinaryHeap<E> implements Heap<E> {
         this(null);
     }
 
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
 
     @Override
     public void clear() {
@@ -44,11 +33,12 @@ public class BinaryHeap<E> implements Heap<E> {
         size = 0;
     }
 
+
     @Override
     public void add(E element) {
         ensureCapacity(size + 1);
         elementNotNullCheck(element);
-
+        siftUp(size - 1);
         elements[size++] = element;
 
     }
@@ -59,18 +49,33 @@ public class BinaryHeap<E> implements Heap<E> {
         return elements[0];
     }
 
+    /**
+     * 1 把最后一个元素覆盖掉第一个的位置
+     * 2 再把最后一个元素删除掉
+     * 3 在做判断
+     * 4 在那边挑 ?子节点中最大的 一个结点交换
+     */
     @Override
     public E remove() {
-        return null;
+        emptyCheck();
+
+        int lastIndex = --size;
+
+  /*   v1
+        E root = elements[0];
+        elements[0] = elements[size - 1];
+        elements[size - 1] = null;
+        size--;*/
+        E root = elements[0];
+        elements[0] = elements[lastIndex];
+        elements[lastIndex] = null;
+        siftDown(0);
+        return root;
     }
 
     @Override
     public E replace(Object element) {
         return null;
-    }
-
-    public int compare(E el, E e2) {
-        return comparable != null ? comparable.compare(el, e2) : ((Comparable<E>) el).compareTo(e2);
     }
 
     /**
@@ -79,16 +84,72 @@ public class BinaryHeap<E> implements Heap<E> {
      * @param index
      */
     private void siftUp(int index) {
-        E e = elements[index];
-        /**
+        /*  E element = elements[index];
+
+         *//**
          * 不是第一个位置
-         */
+         *//*
         while (index > 0) {
-            E p = elements[size >> 1];
+            //找到父节点
+            int parentIndex = (index - 1) >> 1;
+            E parent = elements[parentIndex];
+            if (compare(element, parent) <= 0) {
+                return;
+            }
+            //将父元素的地址写到index 的位置
+            E tmp = elements[index];
+            elements[index] = elements[parentIndex];
+            elements[parentIndex] = tmp;
+            index = parentIndex;
 
+        }*/
+        E e = elements[index];
+        while (index > 0) {
+            int pIndex = (index - 1) >> 1;
+            E p = elements[pIndex];
+            if (compare(e, p) <= 0) {
+                break;
+            }
+            //将父元素存储在index的位置
+            elements[index] = p;
+            //重新赋值index
+            index = pIndex;
         }
+        elements[index] = e;
+    }
 
+    /**
+     * 让index结点的元素下滤
+     *
+     * @param index 位置对应的子节点
+     */
+    private void siftDown(int index) {
+        E element = elements[index];
+        //必须要有子节点 也就是index的位置必须要有子节点
+        //index < 第一个叶子结点的索引
+        // 第一个叶子结点的索引 == 非叶子结点的数量
+        int half = size >> 1;
+        while (index < half) {
+            //index 的结点有两种情况
+            //1 只有左子节点
+            //2 同时有左右子节点
+            //默认左子节点的索引
+            int chindIndex = (index << 1) + 1;
+            E chind = elements[chindIndex];
 
+            /**
+             * 找到最大的子节点 进行比较
+             */
+
+            if (compare(element, chind) > 0) {
+                break;
+            }
+            // 将子节点存放到index的位置
+            elements[index] = chind;
+            //重新设置index
+            index = chindIndex;
+        }
+        elements[index] = element;
     }
 
     private void emptyCheck() {
