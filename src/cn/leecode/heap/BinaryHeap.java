@@ -1,5 +1,7 @@
 package cn.leecode.heap;
 
+import cn.leecode.heap.printer.BinaryTreeInfo;
+
 import java.util.Comparator;
 
 /**
@@ -10,7 +12,7 @@ import java.util.Comparator;
  * @version 1.0
  * @create 2020-06-28 18:26
  */
-public class BinaryHeap<E> extends AbstractHeap<E> {
+public class BinaryHeap<E> extends AbstractHeap<E> implements BinaryTreeInfo {
     private E[] elements;
     //默认的元素
     private static final int DEFAULT_CAPACITY = 10;
@@ -21,9 +23,42 @@ public class BinaryHeap<E> extends AbstractHeap<E> {
     }
 
     public BinaryHeap() {
-        this(null);
+        this(null, null);
     }
 
+    public BinaryHeap(E[] elements, Comparator<E> comparator) {
+        super(comparator);
+        if (elements == null || elements.length == 0) {
+            this.elements = (E[]) new Object[DEFAULT_CAPACITY];
+        } else {
+            size = elements.length;
+            int capacity = Math.max(elements.length, DEFAULT_CAPACITY);
+            this.elements = (E[]) new Object[capacity];
+            for (int i = 0; i < elements.length; i++) {
+                this.elements[i] = elements[i];
+            }
+            heapify();
+        }
+    }
+
+
+    public BinaryHeap(E[] elements) {
+        this.elements = elements;
+    }
+
+    private void heapify() {
+        // 自上而下的上滤
+//		for (int i = 1; i < size; i++) {
+//			siftUp(i);
+//		}
+        /**
+         * 自下而上的下虑
+         */
+        for (int i = (size >> 1) - 1; i >= 0; i--) {
+            siftDown(i);
+        }
+
+    }
 
     @Override
     public void clear() {
@@ -36,11 +71,10 @@ public class BinaryHeap<E> extends AbstractHeap<E> {
 
     @Override
     public void add(E element) {
-        ensureCapacity(size + 1);
         elementNotNullCheck(element);
-        siftUp(size - 1);
+        ensureCapacity(size + 1);
         elements[size++] = element;
-
+        siftUp(size - 1);
     }
 
     @Override
@@ -58,7 +92,6 @@ public class BinaryHeap<E> extends AbstractHeap<E> {
     @Override
     public E remove() {
         emptyCheck();
-
         int lastIndex = --size;
 
   /*   v1
@@ -73,9 +106,25 @@ public class BinaryHeap<E> extends AbstractHeap<E> {
         return root;
     }
 
+    /**
+     * 替换堆顶元素
+     *
+     * @param element 要替换的元素
+     * @return 返回被的元素
+     */
     @Override
-    public E replace(Object element) {
-        return null;
+    public E replace(E element) {
+        elementNotNullCheck(element);
+        E root = null;
+        if (size == 0) {
+            elements[0] = element;
+            size++;
+        } else {
+            root = elements[0];
+            elements[0] = element;
+            siftDown(0);
+        }
+        return root;
     }
 
     /**
@@ -134,20 +183,28 @@ public class BinaryHeap<E> extends AbstractHeap<E> {
             //1 只有左子节点
             //2 同时有左右子节点
             //默认左子节点的索引
-            int chindIndex = (index << 1) + 1;
-            E chind = elements[chindIndex];
-
+            int childIndex = (index << 1) + 1;
+            E child = elements[childIndex];
+            /**
+             * 找到右子节点 存在
+             */
+            int rightIndex = childIndex + 1;
+            //右边要比左边大
+            if (rightIndex < size && compare(elements[rightIndex], child) > 0) {
+                childIndex = rightIndex;
+                child = elements[rightIndex];
+            }
             /**
              * 找到最大的子节点 进行比较
              */
-
-            if (compare(element, chind) > 0) {
+            if (compare(element, child) > 0) {
                 break;
             }
             // 将子节点存放到index的位置
-            elements[index] = chind;
+            elements[index] = child;
             //重新设置index
-            index = chindIndex;
+            index = childIndex;
+            //106121575
         }
         elements[index] = element;
     }
@@ -180,4 +237,25 @@ public class BinaryHeap<E> extends AbstractHeap<E> {
     }
 
 
+    @Override
+    public Object root() {
+        return 0;
+    }
+
+    @Override
+    public Object left(Object node) {
+        int index = ((int) node << 1) + 1;
+        return index >= size ? null : index;
+    }
+
+    @Override
+    public Object right(Object node) {
+        int index = ((int) node << 1) + 2;
+        return index >= size ? null : index;
+    }
+
+    @Override
+    public Object string(Object node) {
+        return elements[(int) node];
+    }
 }
