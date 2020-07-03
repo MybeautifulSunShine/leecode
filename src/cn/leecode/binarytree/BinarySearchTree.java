@@ -5,6 +5,7 @@ import cn.leecode.binarytree.printer.BinaryTreeInfo;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 /**
  * 描述:
@@ -249,7 +250,9 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
      * 树为null 返回false
      */
     public boolean isComplete() {
-        if (root == null) return false;
+        if (root == null) {
+            return false;
+        }
         Queue<Node<E>> queue = new LinkedList<>();
         queue.offer(root);
         /**
@@ -310,7 +313,9 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
      * 调用打印的方法
      */
     private void toString(Node<E> node, StringBuilder sb, String prefix) {
-        if (node == null) return;
+        if (node == null) {
+            return;
+        }
 
         toString(node.left, sb, prefix + "L---");
         sb.append(prefix).append(node.element).append("\n");
@@ -454,19 +459,28 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
     }
 
     private void inorder(Node<E> node, Visitor<E> visitor) {
-        if (node == null || visitor == null) {
+        /**
+         * 第一个判断是未了不进入递归调用里面
+         */
+        if (node == null || visitor.stop) {
             return;
         }
 
         inorder(node.left, visitor);
-        visitor.visit(node.element);
+        /**
+         * 第二个判断是为了禁止自己的东西
+         */
+        if (visitor.stop) {
+            return;
+        }
+        visitor.stop = visitor.visit(node.element);
         inorder(node.right, visitor);
     }
 
     /**
      * 后续遍历
      *
-     * @param visitor
+     * @param visitor 遍历器
      */
     public void postorder(Visitor<E> visitor) {
         if (visitor == null) {
@@ -476,11 +490,16 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
     }
 
     private void postorder(Node<E> node, Visitor<E> visitor) {
-        if (node == null || visitor == null) return;
+        if (node == null || visitor.stop) {
+            return;
+        }
 
         postorder(node.left, visitor);
         postorder(node.right, visitor);
-        visitor.visit(node.element);
+        if (visitor.stop) {
+            return;
+        }
+        visitor.stop = visitor.visit(node.element);
     }
 
 
@@ -528,6 +547,26 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
     }
 
     /**
+     * 非递归的遍历
+     */
+    private void preorder2(Visitor<E> visitor) {
+        if (visitor.stop) {
+            return;
+        }
+        Node<E> node = root;
+        Stack<Node<E>> stack = new Stack<>();
+        stack.push(node);
+        while (stack.isEmpty()) {
+            if (node.left != null) {
+                stack.push(node.left);
+            }
+            if (node.right != null) {
+                stack.push(node.right);
+            }
+        }
+    }
+
+    /**
      * 后续节点 ,求某个节点的后一个节点
      * 逻辑跟上面的一样 但是确实相反的
      */
@@ -566,9 +605,11 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         while (!queue.isEmpty()) {
             Node<E> node = queue.poll();
             /**
-             * 真正的使用结点的内用
+             * 真正的使用结点的内用 根据判断值返回内容
              */
-            visitor.visit(node.element);
+            if (visitor.visit(node.element)) {
+                return;
+            }
 
             if (node.left != null) {
                 queue.offer(node.left);
@@ -583,8 +624,19 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
     /**
      * 内部接口 访问器
      */
-    public static interface Visitor<E> {
+   /* public static interface Visitor<E> {
         void visit(E element);
+    }
+   */
+    public static abstract class Visitor<E> {
+        //判断是否是继续遍历
+        private boolean stop;
+
+        /**
+         * @param element 里面的元素
+         * @return 如果接口返回true就说明是遍历结束
+         */
+        abstract boolean visit(E element);
     }
 
     /**

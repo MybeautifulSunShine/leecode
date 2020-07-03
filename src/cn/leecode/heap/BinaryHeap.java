@@ -144,6 +144,8 @@ public class BinaryHeap<E> extends AbstractHeap<E> implements BinaryTreeInfo {
             E parent = elements[parentIndex];
             if (compare(element, parent) <= 0) {
                 return;
+
+
             }
             //将父元素的地址写到index 的位置
             E tmp = elements[index];
