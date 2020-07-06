@@ -81,11 +81,13 @@ public class MyArrayList<E> extends AbstractList<E> {
         //挪动的范围是size-1 v1
       /*
         for (int i = size - 1; i >= index; i--) {
+            //把原来的位置替换到 原来位置+1
             elements[i + 1] = elements[i];
         }
         elements[index] = element;
         size++;
         */
+
         //变换index
         for (int i = size; i > index; i--) {
             elements[i] = elements[i - 1];
