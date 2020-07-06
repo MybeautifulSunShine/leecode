@@ -1,8 +1,7 @@
 package cn.leecode.linked;
 
 /**
- * @author SJ217110601
- * 抽象的代码
+ * @author 抽象的代码
  */
 public abstract class AbstractList<E> implements MyList<E> {
     /**

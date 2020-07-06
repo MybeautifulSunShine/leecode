@@ -478,6 +478,43 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
     }
 
     /**
+     * 非递归中序遍历
+     *
+     * @param visitor 遍历器
+     */
+    public void notRecurInorder(Visitor<E> visitor) {
+        if (visitor == null || root == null) {
+            return;
+        }
+        Node<E> node = root;
+        Stack<Node<E>> stack = new Stack<>();
+        while (true) {
+            if (node != null) {
+                if (visitor.visit(node.element)) {
+                    return;
+                }
+                //左节点一直入栈
+                if (node.left != null) {
+                    stack.push(node.left);
+                }
+                //继续往左走
+                node = node.left;
+            } else if (stack.isEmpty()) {
+                return;
+            } else {
+                //左边走完了 把最后进入的出栈
+                node = stack.pop();
+                //遍历最后的节点
+                if (visitor.visit(node.element)) {
+                    return;
+                }
+                //取出右节点重复上面的操作
+                node = node.right;
+            }
+        }
+    }
+
+    /**
      * 后续遍历
      *
      * @param visitor 遍历器
@@ -502,6 +539,36 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
         visitor.stop = visitor.visit(node.element);
     }
 
+    /*
+     * 非递归后续遍历
+     *  visitor 遍历器
+     */
+    public void notRecurPostOrder(Visitor<E> visitor) {
+        if (visitor == null || root == null) {
+            return;
+        }
+        //中段条件 上 一次遍历的元素是不是父节点的子节点
+        Node<E> prev = null;
+        Stack<Node<E>> stack = new Stack<>();
+        stack.push(root);
+        //判断是否是叶子节点
+        while (!stack.isEmpty()) {
+            Node<E> top = stack.peek();
+            if (top.isLeaf() || (prev != null && prev.parent == top)) {
+                prev = stack.pop();
+                if (visitor.visit(prev.element)) {
+                    return;
+                }
+            } else {
+                if (top.right != null) {
+                    stack.push(top.right);
+                }
+                if (top.left != null) {
+                    stack.push(top.left);
+                }
+            }
+        }
+    }
 
     /**
      * 判断参数是否为Null
@@ -547,24 +614,34 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
     }
 
     /**
-     * 非递归的遍历
+     * 前序遍历的非递归
      */
-    private void preorder2(Visitor<E> visitor) {
-        if (visitor.stop) {
+    private void notRecurPreorder(Visitor<E> visitor) {
+        if (visitor == null || root == null) {
             return;
         }
         Node<E> node = root;
         Stack<Node<E>> stack = new Stack<>();
-        stack.push(node);
-        while (stack.isEmpty()) {
-            if (node.left != null) {
-                stack.push(node.left);
-            }
-            if (node.right != null) {
-                stack.push(node.right);
+        while (true) {
+            if (node != null) {
+                //如果停止遍历那就返回
+                if (visitor.visit(node.element)) {
+                    return;
+                }
+                //把右节点入栈
+                if (node.right != null) {
+                    stack.push(node.right);
+                }
+                //继续往左走也就是下一个节点
+                node = node.left;
+            } else if (stack.isEmpty()) {
+                return;
+            } else {
+                node = stack.pop();
             }
         }
     }
+
 
     /**
      * 后续节点 ,求某个节点的后一个节点

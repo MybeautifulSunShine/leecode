@@ -78,13 +78,22 @@ public class MyArrayList<E> extends AbstractList<E> {
         rangeCheckForAdd(index);
         //扩容
         ensureCapacity(size + 1);
+        //挪动的范围是size-1 v1
+      /*
+        for (int i = size - 1; i >= index; i--) {
+            elements[i + 1] = elements[i];
+        }
+        elements[index] = element;
+        size++;
+        */
         //变换index
         for (int i = size; i > index; i--) {
             elements[i] = elements[i - 1];
         }
         elements[index] = element;
         size++;
-    } // size是数据规模
+    }
+    // size是数据规模
 
     /**
      * 删除index位置的元素
@@ -155,7 +164,7 @@ public class MyArrayList<E> extends AbstractList<E> {
     /**
      * 保证要有capacity的容量
      *
-     * @param capacity  扩容的数量
+     * @param capacity 扩容的数量
      */
     private void ensureCapacity(int capacity) {
         int oldCapacity = elements.length;
