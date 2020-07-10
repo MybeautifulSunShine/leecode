@@ -1,6 +1,10 @@
+import cn.leecode.linked.MyLinkedList;
+
 public class Main {
 
     public static void main(String[] args) {
+        MyLinkedList<Object> linkedList = new MyLinkedList<>();
+        linkedList.add("aaaa");
 
 //        new HashMap<>();
 //        String[] order = {"语文", "数学", "英语", "物理", "化学", "生物", "政治", "历史", "地理", "总分"};
@@ -33,9 +37,10 @@ public class Main {
 //    }
 //        int intBits = Float.floatToIntBits(6.21f);
 //        System.out.println(intBits);
-        Integer aa =  5489;
+//        Integer aa =  5489;
 //        System.out.println(Integer.toBinaryString(intBits));
-        System.out.println(aa.hashCode());
+//        System.out.println(aa.hashCode());
         //double  和 float
+        System.out.println(5>>1);
     }
 }

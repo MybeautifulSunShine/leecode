@@ -6,7 +6,7 @@ package src.tree;
  * https://leetcode-cn.com/problems/invert-binary-tree/
  */
 public class LeeCode_226 {
-    public TreeNode invertTree(TreeNode root) {
+    public src.tree.TreeNode invertTree(src.tree.TreeNode root) {
         if (root == null) {
             return root;
         }

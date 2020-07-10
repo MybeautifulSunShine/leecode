@@ -6,6 +6,7 @@ public class ListNode {
 
     ListNode(int x) {
         val = x;
+        next = null;
     }
 
     @Override

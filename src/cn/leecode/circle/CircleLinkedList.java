@@ -1,19 +1,11 @@
-package cn.leecode.linked;
+package cn.leecode.circle;
 
-/**
- * 描述:
- * 链表数据结构
- *
- * @author HeGaoJian
- * @version 1.0
- * @create 2019-07-17 16:06
- */
-public class MyLinkedList<E> extends AbstractList<E> {
+import cn.leecode.linked.AbstractList;
 
-    //内部类,只用于LinkedList
-
+public class CircleLinkedList<E> extends AbstractList<E> {
     private Node<E> first;
     private Node<E> last;
+    private Node<E> current;
 
     private static class Node<E> {
         E element;
@@ -22,8 +14,8 @@ public class MyLinkedList<E> extends AbstractList<E> {
 
         public Node(Node<E> prev, E element, Node<E> next) {
             this.prev = prev;
-            this.next = next;
             this.element = element;
+            this.next = next;
         }
 
         @Override
@@ -43,14 +35,41 @@ public class MyLinkedList<E> extends AbstractList<E> {
             } else {
                 sb.append("null");
             }
+
             return sb.toString();
         }
+    }
+
+    public void reset() {
+        current = first;
+    }
+
+    public E next() {
+        if (current == null) return null;
+
+        current = current.next;
+        return current.element;
+    }
+
+    public E remove() {
+        if (current == null) return null;
+
+        Node<E> next = current.next;
+        E element = remove(current);
+        if (size == 0) {
+            current = null;
+        } else {
+            current = next;
+        }
+
+        return element;
     }
 
     @Override
     public void clear() {
         size = 0;
         first = null;
+        last = null;
     }
 
     @Override
@@ -60,100 +79,87 @@ public class MyLinkedList<E> extends AbstractList<E> {
 
     @Override
     public E set(int index, E element) {
-        //取到上一个的东西
         Node<E> node = node(index);
-        //赋值
-        E oldNode = node.element;
+        E old = node.element;
         node.element = element;
-        return oldNode;
+        return old;
     }
 
     @Override
     public void add(int index, E element) {
         rangeCheckForAdd(index);
-        //size = index =0 添加时候得边界问题
-        if (index == size) {
-            //获取到之前的last
+
+        // size == 0
+        // index == 0
+        if (index == size) { // 往最后面添加元素
             Node<E> oldLast = last;
-            //往最后面添加元素 并且
-            last = new Node<>(oldLast, element, null);
-            if (oldLast == null) {
+            last = new Node<>(oldLast, element, first);
+            if (oldLast == null) { // 这是链表添加的第一个元素
                 first = last;
+                first.next = first;
+                first.prev = first;
             } else {
                 oldLast.next = last;
+                first.prev = last;
             }
         } else {
-            //找到下一个
             Node<E> next = node(index);
-            //1找到index上一个的位置 的元素,
-            Node<E> prve = next.prev;
-            //2 链表指向
-            Node<E> node = new Node<>(prve, element, next);
-            //重新指向
+            Node<E> prev = next.prev;
+            Node<E> node = new Node<>(prev, element, next);
             next.prev = node;
-            //如果是0 做操作  index == 0情况
-            if (prve == null) {
+            prev.next = node;
+
+            if (next == first) { // index == 0
                 first = node;
-            } else {
-                prve.next = node;
             }
         }
+
         size++;
     }
 
-    /**
-     * 删除内容
-     *
-     * @param index 索引
-     * @return 返回删除的东西
-     */
     @Override
     public E remove(int index) {
-        //检查索引
         rangeCheck(index);
-        // [null_11_66, 11_66_22, 66_22_33, 22_33_44, 33_44_77, 44_77_null]
-        Node<E> node = node(index);
-        Node<E> prev = node.prev;
-        Node<E> next = node.next;
-        //判断是否是第一个  index  == 0
-        if (prev == null) {
-            first = next;
+        return remove(node(index));
+    }
+
+    private E remove(Node<E> node) {
+        if (size == 1) {
+            first = null;
+            last = null;
         } else {
+            Node<E> prev = node.prev;
+            Node<E> next = node.next;
             prev.next = next;
-        }
-        //判断是否是最后一个 index= (size -1)
-        if (next == null) {
-            last = prev;
-        } else {
             next.prev = prev;
+
+            if (node == first) { // index == 0
+                first = next;
+            }
+
+            if (node == last) { // index == size - 1
+                last = prev;
+            }
         }
+
         size--;
         return node.element;
     }
 
-
-    /**
-     * 获取到对应的Index
-     *
-     * @param element
-     * @return
-     */
     @Override
     public int indexOf(E element) {
-        if (element != null) {
+        if (element == null) {
             Node<E> node = first;
             for (int i = 0; i < size; i++) {
-                if (element.equals(node.element)) {
-                    return i;
-                }
+                if (node.element == null) return i;
+
                 node = node.next;
             }
         } else {
             Node<E> node = first;
             for (int i = 0; i < size; i++) {
-                if (node.element == null) {
-                    return i;
-                }
+                if (element.equals(node.element)) return i;
+
                 node = node.next;
             }
         }
@@ -161,28 +167,23 @@ public class MyLinkedList<E> extends AbstractList<E> {
     }
 
     /**
-     * 获取index位置对于的节点对象
+     * 获取index位置对应的节点对象
      *
-     * @param index 对应索引的位置
+     * @param index
      * @return
      */
     private Node<E> node(int index) {
-        //检查索引
         rangeCheck(index);
-        Node<E> node;
+
         if (index < (size >> 1)) {
-            node = first;
-            //获取到第一个的节点
+            Node<E> node = first;
             for (int i = 0; i < index; i++) {
-                //一路获取到所对应的数据
                 node = node.next;
             }
             return node;
         } else {
-            node = last;
-            //获取到最后一个
+            Node<E> node = last;
             for (int i = size - 1; i > index; i--) {
-                //一路获取到所对应的数据
                 node = node.prev;
             }
             return node;
@@ -198,6 +199,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
             if (i != 0) {
                 string.append(", ");
             }
+
             string.append(node);
 
             node = node.next;

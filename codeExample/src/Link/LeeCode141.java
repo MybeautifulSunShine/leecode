@@ -5,7 +5,6 @@ package Link;
  * 环形链表
  * https://leetcode-cn.com/problems/linked-list-cycle/
  *
- * @author HeGaoJian
  * @version 1.0
  * @create 2019-07-19 14:16
  */
@@ -30,5 +29,21 @@ public class LeeCode141 {
     public static void main(String[] args) {
 //        [1,2,6,3,4,5,6]
 //        6
+    }
+
+    public boolean hasCycle2(ListNode head) {
+        if (head == null || head.next == null) {
+            return false;
+        }
+        ListNode slow = head;
+        ListNode falst = head.next;
+        while (falst != null && falst.next != null) {
+            slow = slow.next;
+            falst = falst.next.next;
+            if (slow == falst) {
+                return true;
+            }
+        }
+        return false;
     }
 }

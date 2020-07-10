@@ -81,7 +81,7 @@ public class SingleCircleLinkedList<E> extends AbstractList<E> {
             if (size == 1) {
                 first = null;
             } else {
-                //如果index 是 0   环形链表操作
+                //如果index 是 0   环形链表操作 自已指向自己
                 Node<E> last = node(size - 1);
                 first = first.next;
                 last.next = first;

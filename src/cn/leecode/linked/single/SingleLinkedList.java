@@ -50,10 +50,15 @@ public class SingleLinkedList<E> extends AbstractList<E> {
     @Override
     public void add(int index, E element) {
         rangeCheckForAdd(index);
+        /*
+         * 最好：O(1)
+         * 最坏：O(n)
+         * 平均：O(n)
+         */
         if (index != 0) {
             //1找到index上一个的位置 的元素,
             Node<E> prve = node(index - 1);
-            //2 链表指向
+            //2 链表指向新添加的元素指向上一个的下一个
             prve.next = new Node<>(element, prve.next);
             //如果是0 做操作
         } else {
@@ -66,12 +71,18 @@ public class SingleLinkedList<E> extends AbstractList<E> {
     public E remove(int index) {
         //检查索引
         rangeCheck(index);
-
+        /*
+         * 最好：O(1)
+         * 最坏：O(n)
+         * 平均：O(n)
+         */
         Node<E> node = first;
         if (index != 0) {
             //获取到上一个参数
             Node<E> prve = node(index - 1);
+            //指向
             node = prve.next;
+            //添加完成
             prve.next = node.next;
         } else {
             //如果index 是 0
