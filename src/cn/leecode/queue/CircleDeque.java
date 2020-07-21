@@ -58,7 +58,10 @@ public class CircleDeque<E> {
      */
     public void enQueueFront(E element) {
         ensureCapacity(size + 1);
-
+        /**
+         * v 1 是在做坐标装换的问题
+         *   elements[front-1] =element;
+         */
         front = index(-1);
         elements[front] = element;
         size++;
@@ -70,7 +73,7 @@ public class CircleDeque<E> {
      * @param element
      */
     public E deQueueRear() {
-        //换索引
+        //换索引 找到真实的索引
         int rearIndex = index(size - 1);
         E rear = elements[rearIndex];
         elements[rearIndex] = null;
@@ -93,7 +96,8 @@ public class CircleDeque<E> {
      * @return
      */
     public E rear() {
-        //做索引的装换 
+        //做索引的装换
+//        elements[front + size - 1];
         return elements[index(size - 1)];
     }
 
@@ -116,8 +120,18 @@ public class CircleDeque<E> {
         return string.toString();
     }
 
+    /**
+     * 索引装换公式
+     *
+     * @param index
+     */
     private int index(int index) {
         index += front;
+        /**
+         * 判断如果是负数的话 计算真实的索引
+         * index可能是负数
+         * 如果是负数 那么就是长度加上 index
+         */
         if (index < 0) {
             return index + elements.length;
         }

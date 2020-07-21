@@ -42,10 +42,11 @@ public class CircleQueue<E> {
 
     public E deQueue() {
         E frontElement = elements[front];
+        //变为空
         elements[front] = null;
         //第一版
-//        front = (front + 1) % elements.length;
-        front = index(1);
+        front = (front + 1) % elements.length;
+//        front = index(1);
         size--;
         return frontElement;
     }
@@ -77,6 +78,8 @@ public class CircleQueue<E> {
 
     private int index(int index) {
         //传入之前的索引给我,返回循环队列上面的索引
+        //v 1
+//        return (front + size) % elements.length;
         index += front;
         return index - (index >= elements.length ? elements.length : 0);
     }
