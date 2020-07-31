@@ -1,3 +1,5 @@
+package cn.leecode;
+
 import cn.leecode.linked.MyLinkedList;
 
 public class Main {

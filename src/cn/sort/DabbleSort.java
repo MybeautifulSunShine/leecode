@@ -1,4 +1,7 @@
-package cn.sort.bubblesort;
+package cn.sort;
+
+import cn.sort.tools.Asserts;
+import cn.sort.tools.Integers;
 
 /**
  * 描述:
@@ -10,12 +13,18 @@ package cn.sort.bubblesort;
  */
 public class DabbleSort {
     public static void main(String[] args) {
+        Integer[] random = Integers.random(10, 1, 100);
+        selectionSort(random);
+        Asserts.test(Integers.isAscOrder(random));
 
     }
 
+    /**
+     * 冒泡排序v1
+     */
     static void DabbleSort1() {
         int[] ints = {12, 22, 54, 10, 5, 25};
-        for (int end = ints.length - 1; end > 1; end--) {
+        for (int end = ints.length - 1; end > 0; end--) {
             for (int begin = 1; begin <= end; begin++) {
                 if (ints[begin] < ints[begin - 1]) {
                     int tmp = ints[begin];
@@ -34,7 +43,7 @@ public class DabbleSort {
      */
     static void DabbleSort2() {
         int[] ints = {12, 22, 54, 10, 5, 25};
-        for (int end = ints.length - 1; end > 1; end--) {
+        for (int end = ints.length - 1; end > 0; end--) {
             boolean sored = true;
             for (int begin = 1; begin <= end; begin++) {
                 if (ints[begin] < ints[begin - 1]) {
@@ -52,4 +61,25 @@ public class DabbleSort {
             System.out.print(ints[i] + "_");
         }
     }
+
+    /**
+     * 选择排序 旋转排序交换在第二次比较里面
+     *
+     * @param integers
+     */
+    static void selectionSort(Integer[] integers) {
+        for (int end = integers.length - 1; end > 0; end--) {
+            Integer maxIndex = 0;
+            for (int bengin = 1; bengin <= end; bengin++) {
+                if (integers[maxIndex] <= integers[bengin]) {
+                    maxIndex = bengin;
+                }
+            }
+            //交换最后一个 把数最大的数据放到最后
+            Integer tmp = integers[maxIndex];
+            integers[maxIndex] = integers[end];
+            integers[end] = tmp;
+        }
+    }
+
 }

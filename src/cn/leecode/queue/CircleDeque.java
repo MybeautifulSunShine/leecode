@@ -126,12 +126,14 @@ public class CircleDeque<E> {
      * @param index
      */
     private int index(int index) {
-        index += front;
+        // v 1  优化后
+//        return (front + index) % elements.length;
         /**
          * 判断如果是负数的话 计算真实的索引
          * index可能是负数
          * 如果是负数 那么就是长度加上 index
          */
+        index += front;
         if (index < 0) {
             return index + elements.length;
         }
@@ -158,4 +160,5 @@ public class CircleDeque<E> {
         // 重置front
         front = 0;
     }
+
 }
