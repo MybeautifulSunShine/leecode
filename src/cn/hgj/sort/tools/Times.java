@@ -1,4 +1,4 @@
-package cn.sort.tools;
+package cn.hgj.sort.tools;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

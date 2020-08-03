@@ -1,7 +1,7 @@
-package cn.sort;
+package cn.hgj.sort;
 
-import cn.sort.tools.Asserts;
-import cn.sort.tools.Integers;
+import cn.hgj.sort.tools.Asserts;
+import cn.hgj.sort.tools.Integers;
 
 /**
  * 描述:

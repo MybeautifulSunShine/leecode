@@ -1,4 +1,4 @@
-package cn.sort.tools;
+package cn.hgj.sort.tools;
 
 public class Asserts {
 	public static void test(boolean value) {
