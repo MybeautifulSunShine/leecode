@@ -139,7 +139,7 @@ public class BinaryHeap<E> extends AbstractHeap<E> implements BinaryTreeInfo {
          * 不是第一个位置
          *//*
         while (index > 0) {
-            //找到父节点
+            //找到父节点 根据公式得出
             int parentIndex = (index - 1) >> 1;
             E parent = elements[parentIndex];
             if (compare(element, parent) <= 0) {
@@ -149,9 +149,10 @@ public class BinaryHeap<E> extends AbstractHeap<E> implements BinaryTreeInfo {
             E tmp = elements[index];
             elements[index] = elements[parentIndex];
             elements[parentIndex] = tmp;
+            //交换pindex的位置
             index = parentIndex;
-
         }*/
+
         E e = elements[index];
         while (index > 0) {
             int pIndex = (index - 1) >> 1;
@@ -175,8 +176,8 @@ public class BinaryHeap<E> extends AbstractHeap<E> implements BinaryTreeInfo {
     private void siftDown(int index) {
         E element = elements[index];
         //必须要有子节点 也就是index的位置必须要有子节点
-        //index < 第一个叶子结点的索引
-        // 第一个叶子结点的索引 == 非叶子结点的数量
+        //index < 第一个叶子结点的索引 (也就是说下虑的东西必须要有叶子节点)
+        // 第一个叶子结点的索引 == 非叶子结点的数量 也就是小于非叶子节点的数量
         int half = size >> 1;
         while (index < half) {
             //index 的结点有两种情况
@@ -207,6 +208,39 @@ public class BinaryHeap<E> extends AbstractHeap<E> implements BinaryTreeInfo {
             //106121575
         }
         elements[index] = element;
+    }
+
+    /**
+     * 理解
+     *
+     * @param index
+     */
+    private void siftDown2(int index) {
+        //index 必须有子节点
+        //参考公式
+        E node = elements[index];
+        int half = index >> 1;
+        while (index < half) {
+            //获取默认左节点的索引
+            int childIndex = (index << 1) + 1;
+            E child = elements[childIndex];
+
+            //获取到右边的内容
+            int rightIndex = childIndex + 1;
+
+            if (rightIndex < size && compare(elements[rightIndex], child) > 0) {
+                childIndex = rightIndex;
+                child = elements[rightIndex];
+            }
+
+            if (compare(node, child) > 0) {
+                break;
+            }
+            elements[index] = child;
+            index = childIndex;
+        }
+        elements[index] = node;
+
     }
 
     private void emptyCheck() {

@@ -1,7 +1,7 @@
 package cn.hgj.sort;
 
-import cn.hgj.sort.tools.Asserts;
 import cn.hgj.sort.tools.Integers;
+import cn.leecode.Asserts;
 
 /**
  * 描述:
@@ -11,12 +11,19 @@ import cn.hgj.sort.tools.Integers;
  * @version 1.0
  * @create 2020-07-09 23:16
  */
-public class DabbleSort {
+public class Main {
     public static void main(String[] args) {
-        Integer[] random = Integers.random(10, 1, 100);
-        selectionSort(random);
-        Asserts.test(Integers.isAscOrder(random));
+        Integer[] random = Integers.random(10000, 1, 20000);
+        testSort(random, new HeapSort(), new SelectionSort(), new DabbleSort3());
 
+    }
+
+    static void testSort(Integer[] arr, Sort... sorts) {
+        for (Sort sort : sorts) {
+            Integer[] newArray = Integers.copy(arr);
+            sort.sort(newArray);
+            Asserts.test(Integers.isAscOrder(newArray));
+        }
     }
 
     /**
