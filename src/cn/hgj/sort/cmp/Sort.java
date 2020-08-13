@@ -1,4 +1,4 @@
-package cn.hgj.sort;
+package cn.hgj.sort.cmp;
 
 import java.text.DecimalFormat;
 
@@ -11,8 +11,8 @@ import java.text.DecimalFormat;
  * @create 2020-08-03 13:38
  */
 @SuppressWarnings("ALL")
-public abstract class Sort implements Comparable<Sort> {
-    protected Integer[] array;
+public abstract class Sort<T extends Comparable<T>> implements Comparable<Sort<T>> {
+    protected T[] array;
     private int cmpCount;
     private int swapCount;
 
@@ -20,7 +20,7 @@ public abstract class Sort implements Comparable<Sort> {
     private long time;
     private DecimalFormat fmt = new DecimalFormat("#.00");
 
-    public void sort(Integer[] array) {
+    public void sort(T[] array) {
         if (array == null || array.length < 2) {
             return;
         }
@@ -39,7 +39,7 @@ public abstract class Sort implements Comparable<Sort> {
         if (result != 0) {
             return result;
         }
-        //如果姐夫哦一样
+
         result = cmpCount - o.cmpCount;
         if (result != 0) {
             return result;
@@ -53,23 +53,23 @@ public abstract class Sort implements Comparable<Sort> {
      * 返回值小于0，代表 array[i1] < array[i2]
      * 返回值大于0，代表 array[i1] > array[i2]
      */
-    protected int cmp(Integer i1, Integer i2) {
+    protected int cmp(int i1, int i2) {
         cmpCount++;
-        return array[i1] - array[i2];
+        return array[i1].compareTo(array[i2]);
     }
 
     /**
      * 比较元素
      */
-    protected int cmpElements(Integer i1, Integer i2) {
+    protected int cmp(T i1, T i2) {
         cmpCount++;
-        return i1 - i2;
+        return i1.compareTo(i2);
     }
 
     // 交换的方法
-    protected void swap(Integer i1, Integer i2) {
+    protected void swap(int i1, int i2) {
         swapCount++;
-        Integer tmp = array[i1];
+        T tmp = array[i1];
         array[i1] = array[i2];
         array[i2] = tmp;
     }

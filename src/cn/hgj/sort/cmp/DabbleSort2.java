@@ -1,4 +1,4 @@
-package cn.hgj.sort;
+package cn.hgj.sort.cmp;
 
 /**
  * 描述:
@@ -8,7 +8,7 @@ package cn.hgj.sort;
  * @version 1.0
  * @create 2020-08-03 14:12
  */
-public class DabbleSort2 extends Sort {
+public class DabbleSort2<T extends Comparable<T>> extends Sort<T> {
     @Override
     protected void sort() {
         for (int end = array.length - 1; end > 0; end--) {

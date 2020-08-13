@@ -1,4 +1,4 @@
-package cn.hgj.sort;
+package cn.hgj.sort.cmp;
 
 import cn.hgj.sort.tools.Integers;
 import cn.leecode.Asserts;

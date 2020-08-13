@@ -1,4 +1,4 @@
-package cn.hgj.sort;
+package cn.hgj.sort.cmp;
 
 /**
  * 描述:
@@ -8,7 +8,7 @@ package cn.hgj.sort;
  * @version 1.0
  * @create 2020-08-07 16:01
  */
-public class HeapSort extends Sort {
+public class HeapSort<T extends Comparable<T>> extends Sort<T> {
     private int heapSize;
 
     @Override
@@ -28,7 +28,7 @@ public class HeapSort extends Sort {
     }
 
     private void siftDown(int index) {
-        Integer elelment = array[index];
+        T elements = array[index];
 
         //找到第一个子节点的位置
         int half = heapSize >> 1;
@@ -36,16 +36,16 @@ public class HeapSort extends Sort {
         while (index < half) {
             //找到左子节点的位置
             int chindIndex = (index << 1) + 1;
-            Integer chind = array[chindIndex];
+            T chind = array[chindIndex];
             //找到右子节点进行比较
             int rightIndex = chindIndex + 1;
             //比较的东西前后要注意
-            if (rightIndex < heapSize && cmpElements(array[rightIndex], chind) > 0) {
+            if (rightIndex < heapSize && cmp(array[rightIndex], chind) > 0) {
                 chindIndex = rightIndex;
                 chind = array[chindIndex];
             }
 
-            if (cmpElements(elelment, chind) >= 0) {
+            if (cmp(elements, chind) >= 0) {
                 break;
             }
             //交换索引与元素
@@ -53,7 +53,7 @@ public class HeapSort extends Sort {
             index = chindIndex;
 
         }
-        array[index] = elelment;
+        array[index] = elements;
     }
 
 
