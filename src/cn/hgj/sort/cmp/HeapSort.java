@@ -9,6 +9,9 @@ package cn.hgj.sort.cmp;
  * @create 2020-08-07 16:01
  */
 public class HeapSort<T extends Comparable<T>> extends Sort<T> {
+    /**
+     * 堆的长度
+     */
     private int heapSize;
 
     @Override

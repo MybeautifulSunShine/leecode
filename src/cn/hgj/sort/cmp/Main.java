@@ -14,7 +14,8 @@ import cn.leecode.Asserts;
 public class Main {
     public static void main(String[] args) {
         Integer[] random = Integers.random(10000, 1, 20000);
-        testSort(random, new HeapSort(), new SelectionSort(), new DabbleSort3());
+        testSort(random, new HeapSort(), new SelectionSort(), new DabbleSort3(), new HeapSort(),
+                new MergeSort());
 
     }
 
